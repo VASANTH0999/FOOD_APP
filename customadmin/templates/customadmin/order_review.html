@@ -1,0 +1,32 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Order Review</h1>
+
+    <!-- Displaying User Info -->
+    <h3>Your Information</h3>
+    <p><strong>Name:</strong> {{ user_info.name }}</p>
+    <p><strong>Email:</strong> {{ user_info.email }}</p>
+    <p><strong>Street:</strong> {{ user_info.street }}</p>
+    <p><strong>City:</strong> {{ user_info.city }}</p>
+    <p><strong>State:</strong> {{ user_info.state }}</p>
+    <p><strong>Postal Code:</strong> {{ user_info.zip }}</p>
+
+    <!-- Displaying Cart Items -->
+    <h3>Your Cart</h3>
+    {% if cart.items.all %}
+        <ul>
+            {% for item in cart.items.all %}
+                <li>{{ item.name }} - <span class="price">${{ item.price }}</span></li>
+            {% endfor %}
+        </ul>
+        <p class="total-price">Total Price: ${{ cart.total_price }}</p>
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+
+    <!-- Confirm Order Button -->
+    <a href="{% url 'customadmin:confirm_order' %}" class="btn btn-primary">Confirm Order</a>
+</div>
+{% endblock %}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - World-Class Experience</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("{% static 'images/2.jpg' %}"), linear-gradient(to bottom right, #007bff, #00d4ff);
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            transition: transform 1s ease, opacity 1s ease;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .slide-out {
+            transform: translateX(100vw);
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="content">
+        <h1>Welcome to Our Food Delivery Service!</h1>
+        <p>Start your delicious journey with us now.</p>
+        <button class="btn" id="get-started-btn">Get Started</button>
+    </div>
+
+    <script>
+        const btn = document.getElementById('get-started-btn');
+        const content = document.getElementById('content');
+
+        btn.addEventListener('click', function() {
+            content.classList.add('slide-out');
+            setTimeout(function() {
+                window.location.href = "{% url 'login_selection' %}";
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

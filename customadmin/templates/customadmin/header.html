@@ -1,0 +1,119 @@
+<!-- customadmin/templates/header.html -->
+<header>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'customadmin:admin_dashboard' %}" class="nav-link">Dashboard</a></li>
+                <li><a href="{% url 'customadmin:add_menu_item' %}" class="nav-link">Add Menu Item</a></li>
+                <li><a href="{% url 'customadmin:add_restaurant' %}" class="nav-link">Add Restaurant</a></li>
+                <li><a href="{% url 'customadmin:logout' %}" class="nav-link">Logout</a></li> <!-- Link to logout -->
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<style>
+    /* Header Styling */
+    header {
+        background-color: #121212;
+        color: white;
+        padding: 20px 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    header .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #00b4d8;
+        margin: 0;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+    }
+
+    header nav ul {
+        list-style: none;
+        display: flex;
+    }
+
+    header nav ul li {
+        margin-left: 30px;
+        position: relative;
+    }
+
+    header nav ul li a {
+        text-decoration: none;
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+        position: relative;
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    header nav ul li a:hover {
+        color: #00b4d8;
+        transform: translateY(-3px);
+    }
+
+    header nav ul li a:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #00b4d8;
+        transition: width 0.3s ease;
+    }
+
+    header nav ul li a:hover:after {
+        width: 100%;
+    }
+
+    /* Mobile Responsive Design */
+    @media (max-width: 768px) {
+        header .container {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        header nav ul {
+            flex-direction: column;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        header nav ul li {
+            margin-left: 0;
+            margin-bottom: 10px;
+        }
+
+        header nav ul li a {
+            font-size: 16px;
+            padding: 5px 0;
+            width: 100%;
+            text-align: left;
+        }
+    }
+</style>

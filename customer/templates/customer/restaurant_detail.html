@@ -1,0 +1,110 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<div class="restaurant-detail-container">
+    <div class="restaurant-header">
+        <h1>{{ restaurant.name }}</h1>
+        <p class="restaurant-description">{{ restaurant.description }}</p>
+        <p class="restaurant-address">📍 Address: {{ restaurant.address }}</p>
+        {% if restaurant.image %}
+            <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" class="restaurant-image">
+        {% endif %}
+    </div>
+
+    <h2 class="section-title">Select a Restaurant for Each Item:</h2>
+
+    <ul class="menu-items-list">
+        {% for item in menu_items %}
+            <li class="menu-item">
+                <div class="item-details">
+                    <h3>{{ item.name }}</h3>
+                    <p class="item-price">💵 Price: {{ item.price }}</p>
+                    <p class="item-description">{{ item.description }}</p>
+                </div>
+
+                <div class="restaurant-select">
+                    <form method="GET" action="{% url 'restaurant_detail' restaurant.id item.id %}">
+                        <label for="restaurant-select-{{ item.id }}">Choose Restaurant:</label>
+                        <select name="restaurant_id" id="restaurant-select-{{ item.id }}" onchange="this.form.submit()">
+                            {% for r in restaurants %}
+                                <option value="{{ r.id }}" {% if r.id == restaurant.id %}selected{% endif %}>{{ r.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+
+                <div class="add-to-cart">
+                    <form method="POST" action="{% url 'add_to_cart' item.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="restaurant_id" value="{{ restaurant.id }}">
+                        <button type="submit" class="btn add-to-cart-btn">Add to Cart 🛒</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<style>
+    .restaurant-detail-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fdfdfd;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    .restaurant-header {
+        text-align: center;
+    }
+    .restaurant-image {
+        width: 100%;
+        max-width: 300px; /* Adjust the width to your preference */
+        max-height: 200px; /* Adjust the height as needed */
+        object-fit: cover;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    .section-title {
+        font-size: 1.5em;
+        text-align: center;
+        margin-top: 30px;
+        color: #333;
+    }
+    .menu-items-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    .menu-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .item-details {
+        text-align: left;
+    }
+    .item-price, .item-description {
+        color: #666;
+    }
+    .restaurant-select, .add-to-cart {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .add-to-cart-btn {
+        background-color: #FF4500;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 0.9em;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+    .add-to-cart-btn:hover {
+        background-color: #FF6347;
+    }
+</style>
+{% endblock %}

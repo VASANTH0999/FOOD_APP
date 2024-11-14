@@ -1,0 +1,16 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<h1>Restaurants</h1>
+<ul>
+    {% for restaurant in restaurants %}
+        <li>
+            <a href="{% url 'restaurant_detail' restaurant.id %}?category={{ category }}">
+                {{ restaurant.name }}
+            </a>
+        </li>
+    {% empty %}
+        <p>No restaurants available in this category.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

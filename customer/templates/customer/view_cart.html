@@ -1,0 +1,175 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center text-primary font-weight-bold mb-4" style="font-family: 'Poppins', sans-serif;">Your Cart</h1>
+
+    {% if cart.items.all %}
+        <div class="row">
+            {% for item in cart.items.all %}
+                <div class="col-md-4 mb-4">
+                    <div class="card food-card shadow-lg border-0 rounded-lg overflow-hidden hover-zoom">
+                        <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="transition: transform 0.3s ease-in-out;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary font-weight-bold">{{ item.name }}</h5>
+                            <p class="card-text text-muted">{{ item.description|slice:":60" }}...</p>
+                            <p class="card-text text-success font-weight-bold">${{ item.price }}</p>
+                            <input type="hidden" name="cart_items[]" value="{{ item.name }}">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Total Price Section -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h3 class="font-weight-bold text-dark animated-text" style="font-size: 1.5rem;">Total Price: ${{ total_price }}</h3>
+            <input type="hidden" name="total_price" value="{{ total_price }}">
+        </div>
+
+        <!-- Clear Cart Button -->
+        <form method="POST" action="{% url 'clear_cart' %}" class="mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-lg w-100 rounded-pill shadow-sm hover-shadow text-uppercase">Clear Cart</button>
+        </form>
+
+        <!-- User Info Section -->
+        <form method="POST" action="{% url 'order_summary' %}" class="mt-4">
+            {% csrf_token %}
+            {% for item in cart.items.all %}
+                <input type="hidden" name="cart_items[]" value="{{ item.name }}">
+            {% endfor %}
+            <input type="hidden" name="total_price" value="{{ total_price }}">
+
+            <div class="form-group animated-text">
+                <label for="name" class="text-muted">Full Name</label>
+                <input required class="form-control form-control-lg" type="text" placeholder="Your Name" name="name" />
+            </div>
+            <div class="form-group animated-text">
+                <label for="email" class="text-muted">Email Address</label>
+                <input required class="form-control form-control-lg" type="email" placeholder="example@company.com" name="email" />
+            </div>
+            <div class="form-group animated-text">
+                <label for="street" class="text-muted">Street</label>
+                <input required class="form-control form-control-lg" type="text" placeholder="123 Street Name" name="street" />
+            </div>
+            <div class="form-group animated-text">
+                <label for="city" class="text-muted">City</label>
+                <input required class="form-control form-control-lg" type="text" placeholder="City" name="city" />
+            </div>
+            <div class="form-group animated-text">
+                <label for="state" class="text-muted">State</label>
+                <input required class="form-control form-control-lg" type="text" placeholder="State" name="state" />
+            </div>
+            <div class="form-group animated-text">
+                <label for="zip" class="text-muted">Postal Code</label>
+                <input required class="form-control form-control-lg" type="text" placeholder="Postal Code" name="zip" />
+            </div>
+
+            <!-- PayPal Button Section -->
+            <div class="mt-4">
+                <h3 class="text-center animated-title" style="font-family: 'Poppins', sans-serif;">Choose Your Payment Method</h3>
+                <div id="paypal-button" class="text-center"></div>
+            </div>
+
+            <!-- Submit Button with Modal Confirmation -->
+            <button type="button" class="btn btn-success btn-lg w-100 mt-4 rounded-pill hover-shadow animated-link" data-toggle="modal" data-target="#submitModalCart">Order Now</button>
+
+            <!-- Order Confirmation Modal -->
+            <div class="modal fade" id="submitModalCart" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">Confirm Your Order</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to place this order? Once confirmed, it will be processed immediately.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Confirm Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    {% else %}
+        <p class="text-center animated-text text-muted" style="font-size: 1.25rem;">Your cart is empty. Add some items to get started!</p>
+    {% endif %}
+</div>
+
+<!-- Include PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=Aaeudu04xOCAn354UtNeLRVpLspWNJIN23geXAKPIKin2RAQTEiSFWnm7_cmRtnvnyE4fV3L7o-OfQoG&currency=USD"></script>
+
+<script>
+    // Render PayPal Button
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ total_price }}' // Pass total cart price here
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert('Payment completed by ' + details.payer.name.given_name);
+                // Redirect to a Django view to finalize the order
+                window.location.href = "{% url 'order_success' %}";
+            });
+        }
+    }).render('#paypal-button'); // Display PayPal button
+</script>
+
+{% block css %}
+<style>
+    /* Lighting effect for food item cards */
+    .food-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .food-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.4);
+        animation: glowing 1.5s ease-in-out infinite alternate;
+    }
+
+    .food-card img {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .food-card:hover img {
+        transform: scale(1.1);
+    }
+
+    @keyframes glowing {
+        0% {
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+        100% {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+        }
+    }
+
+    /* Hover effect to enlarge food cards */
+    .food-card:hover {
+        transform: scale(1.05);
+    }
+
+    /* Additional styling */
+    .food-card img {
+        max-height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+{% endblock %}
