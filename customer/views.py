@@ -250,10 +250,14 @@ from .models import MenuItem, Cart
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
 def add_to_cart(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    # Check if user is authenticated
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        cart, created = Cart.objects.get_or_create(session_key=request.session.session_key)
 
     cart.items.add(item)
     cart.update_total_price()
@@ -261,23 +265,16 @@ def add_to_cart(request, item_id):
     return redirect('view_cart')  # Redirect to the cart page after adding an item
 
 
-@login_required
 def view_cart(request):
+    # Check if user is authenticated
     if request.user.is_authenticated:
-        try:
-            cart = Cart.objects.get(user=request.user)
-            order_id = cart.order.pk if hasattr(cart, 'order') else None
-            total_price = sum(item.price for item in cart.items.all())  # Calculate the total price
-        except Cart.DoesNotExist:
-            cart = None
-            order_id = None
-            total_price = 0  # Default total price if cart doesn't exist
+        cart, created = Cart.objects.get_or_create(user=request.user)
     else:
-        cart = None
-        order_id = None
-        total_price = 0  # Default total price if user is not authenticated
+        cart, created = Cart.objects.get_or_create(session_key=request.session.session_key)
 
-    return render(request, 'customer/view_cart.html', {'cart': cart, 'order_id': order_id, 'total_price': total_price})
+    total_price = sum(item.price for item in cart.items.all())  # Calculate the total price
+
+    return render(request, 'customer/view_cart.html', {'cart': cart, 'total_price': total_price})
 
 
 ORDER_STATUSES = ['Order Placed', 'Preparing', 'Out for Delivery', 'Delivered']
@@ -299,13 +296,26 @@ def get_order_status(request):
     return render(request, 'customer/track_order.html', {'status': current_status})
 
 
-@login_required
 def clear_cart(request):
-    try:
-        cart = Cart.objects.get(user=request.user)
-        cart.items.clear()  # Clears all items in the cart
-    except Cart.DoesNotExist:
-        pass  # Cart does not exist; nothing to clear
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        try:
+            # For logged-in users, get the cart associated with the user
+            cart = Cart.objects.get(user=request.user)
+            cart.items.clear()  # Clears all items in the cart
+        except Cart.DoesNotExist:
+            pass  # Cart does not exist; nothing to clear
+    else:
+        # For anonymous users, use session-based cart
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()  # Create a session if one doesn't exist
+        try:
+            cart = Cart.objects.get(session_key=session_key)
+            cart.items.clear()  # Clears all items in the cart
+        except Cart.DoesNotExist:
+            pass  # Cart does not exist; nothing to clear
+
     return redirect('view_cart')
 
 
