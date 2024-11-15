@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1c1c1c;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .login-container {
+            background: #2c2c2c;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 32px;
+            color: #ff6f61;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            background: #3c3c3c;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .input-field::placeholder {
+            color: #b3b3b3;
+        }
+
+        .input-field:focus {
+            background: #4c4c4c;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff6f61, #ff9a8b);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #ff9a8b, #ff6f61);
+        }
+
+        .signup-link {
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ff6f61;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .signup-link:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .alert {
+            color: #ff6347;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .background-effect {
+            position: absolute;
+            top: 20%;
+            right: 20%;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: pulse 8s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+        }
+
+        .background-effect:nth-child(2) {
+            left: 10%;
+            top: 70%;
+            width: 150px;
+            height: 150px;
+            animation-duration: 12s;
+            opacity: 0.4;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Background Effect -->
+        <div class="background-effect"></div>
+        <div class="background-effect"></div>
+
+        <!-- Alert for errors (optional) -->
+        {% if messages %}
+            <div class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h2>Login to Your Account</h2>
+        <form method="POST" action="{% url 'weblogin' %}">
+            {% csrf_token %}
+            <input type="text" name="username" class="input-field" placeholder="Username" required aria-label="Username">
+            <input type="password" name="password" class="input-field" placeholder="Password" required aria-label="Password">
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <!-- Link to Signup page -->
+        <a href="{% url 'websigin' %}" class="signup-link">Don't have an account? Sign Up</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!-- customadmin/templates/add_menu_item.html -->
+{% extends 'customadmin/base.html' %}
+
+{% block title %}Add Menu Item{% endblock %}
+
+{% block content %}
+    <h2>Add New Menu Item</h2>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Item</button>
+    </form>
+{% endblock %}

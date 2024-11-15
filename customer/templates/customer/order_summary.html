@@ -1,0 +1,112 @@
+{% extends 'customer/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-primary font-weight-bold" style="font-family: 'Poppins', sans-serif;">Order Summary</h2>
+    <p class="text-center text-muted" style="font-size: 1.2rem;">Thank you for your order! Below are the details:</p>
+
+    <!-- Order Details Section -->
+    <div class="order-details mt-5">
+        <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
+            <div class="card-body">
+                <h4 class="card-title text-primary font-weight-bold">Cart Items</h4>
+                <ul class="list-unstyled">
+                    {% for item in cart_items %}
+                        <li class="cart-item mb-2" style="font-size: 1.1rem;">
+                            <i class="fas fa-check-circle text-success"></i> {{ item }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Price Section -->
+    <div class="total-price mt-4 text-center">
+        <h3 class="text-success font-weight-bold" style="font-size: 1.5rem;">Total Price: ${{ total_price }}</h3>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons text-center mt-4">
+        <!-- Home Button -->
+        <a href="{% url 'index' %}" class="btn btn-primary btn-lg mx-2 shadow-sm animated-button">Home</a>
+
+        <!-- Go to Menu Button -->
+        <a href="{% url 'menu' %}" class="btn btn-secondary btn-lg mx-2 shadow-sm animated-button">Order more? Go to Menu</a>
+
+        <!-- Track Order Button -->
+        <a href="{% url 'get_order_status' %}" class="btn btn-warning btn-lg mx-2 shadow-sm animated-button">Track Order</a>
+    </div>
+</div>
+
+{% block css %}
+<style>
+    /* Container Styling */
+    .container {
+        font-family: 'Poppins', sans-serif;
+        padding: 2rem;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Order Details Card */
+    .order-details {
+        margin-top: 30px;
+    }
+
+    .order-details .card {
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .order-details .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Cart Item Styling */
+    .cart-item {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Total Price Styling */
+    .total-price h3 {
+        font-size: 1.5rem;
+        color: #4caf50;
+        font-weight: 700;
+    }
+
+    /* Action Buttons */
+    .action-buttons .btn {
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .action-buttons .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .animated-button {
+        animation: fadeIn 1s ease-out;
+    }
+
+    /* Animation for Button */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+{% endblock %}

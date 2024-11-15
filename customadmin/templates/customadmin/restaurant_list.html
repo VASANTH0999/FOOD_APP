@@ -1,0 +1,25 @@
+<!-- templates/restaurant_list.html -->
+{% extends 'customadmin/base.html' %}
+
+{% block title %}Restaurant List{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Restaurants</h1>
+        <ul>
+            {% for restaurant in restaurants %}
+                <li>
+                    <h2>{{ restaurant.name }}</h2>
+                    {% if restaurant.image %}
+                        <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}">
+                    {% endif %}
+                    <p>{{ restaurant.description }}</p>
+                    <p>Address: {{ restaurant.address }}</p>
+                    <p>Phone: {{ restaurant.phone_number }}</p>
+                </li>
+            {% empty %}
+                <li>No restaurants found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

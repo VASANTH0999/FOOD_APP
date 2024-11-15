@@ -1,0 +1,19 @@
+<!-- customadmin/templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <!-- Add your shared CSS links here -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% include 'customadmin/header.html' %}  <!-- Include the header -->
+    <div class="container">
+        {% block content %} <!-- This is where page-specific content will go -->
+        {% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-size: cover;
+        background-image: url("{% static 'images/3.jpg' %}");
+        background-position: center;
+        min-height: 87vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        background-color: #F5F5DC;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        padding: 100px;
+    }
+
+    .category-card, .food-item {
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        padding: 20px;
+        background-color: #FFFFFF;
+        width: 250px;
+        height: auto;
+        margin: 1px;
+        opacity: 0;
+        transform: translateY(100px);
+        animation: slideUp 0.6s ease-in-out forwards;
+        /* Updated bright RGB box-shadow for lighting effect */
+        box-shadow: 0 15px 30px rgba(173, 216, 230, 0.4),  /* Soft blue shadow */
+                0 0 40px rgba(173, 216, 230, 0.6),     /* Medium blue glow */
+                0 -5px 50px rgba(173, 216, 230, 0.8);
+    }
+
+    @keyframes slideUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .category-card img, .food-item img {
+        border-radius: 10px;
+        box-shadow: 20px 10px 10px rgba(0,0,0,0.1);
+        width: 90%;
+        height: auto;
+    }
+
+    .col-md-4 {
+        padding-left: 5px;
+        padding-right: 5px;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        margin-top: 10px;
+        padding: 5px 15px;
+        background-color: #FF6347;
+        color: #FFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #FF4500;
+    }
+
+    .back-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #6c757d;
+        color: #FFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .back-btn:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-sm-12 text-center">
+            <h1>Explore Our Menu</h1>
+        </div>
+    </div>
+
+    {% if not menu_items %}
+    <!-- Show categories first -->
+    <div class="row justify-content-center mt-5">
+        {% for category in categories %}
+        <div class="col-md-4 col-sm-12 text-center mb-4">
+            <a href="?category={{ category.name }}">
+                <div class="category-card">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-category.jpg' %}" alt="Default Image">
+                    {% endif %}
+                    <h5 class="mt-3">{{ category.name }}</h5>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Show items from the selected category -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-sm-12 text-center">
+            <h2>Items in {{ selected_category }}</h2>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="row justify-content-center">
+        <div class="col-md-12 text-center">
+            <a href="?"><button class="back-btn">Back to Categories</button></a>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        {% for item in menu_items %}
+        <div class="col-md-4 col-sm-12 text-center mb-4">
+            <div class="food-item">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                <h5 class="mt-3">{{ item.name }}</h5>
+                <p>Price: {{ item.price }}</p>
+                <p>{{ item.description }}</p>
+
+                <!-- See Restaurants Button -->
+                <a href="{% url 'restaurant_detail' restaurant_id=item.restaurant.id %}?category={{ selected_category }}" class="btn">See Restaurants</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

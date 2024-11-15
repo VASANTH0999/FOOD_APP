@@ -1,0 +1,136 @@
+<!-- customadmin/templates/admin_dashboard.html -->
+{% extends 'customadmin/base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <h2>Admin Dashboard</h2>
+        <div class="dashboard-content">
+            <ul class="dashboard-menu">
+                <li><a href="{% url 'customadmin:add_menu_item' %}" class="dashboard-link">Add Menu Item</a></li>
+                <li><a href="{% url 'customadmin:add_restaurant' %}" class="dashboard-link">Add Restaurant</a></li>
+                <li><a href="{% url 'customadmin:restaurant_list' %}" class="dashboard-link">View Restaurants</a></li>
+                <li><a href="{% url 'customadmin:view_selected_items' %}" class="dashboard-link">View Selected Menu Items</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <style>
+        /* Global resets */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #2d3e50, #121212);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 16px;
+            color: #ffffff;
+            transition: background 0.3s ease;
+        }
+
+        /* Dashboard container */
+        .dashboard-container {
+            background-color: #1c1c1c;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            animation: fadeIn 1s ease-out;
+            text-align: center;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #00b4d8;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Dashboard Menu */
+        .dashboard-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .dashboard-menu li {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .dashboard-link {
+            display: inline-block;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #fff;
+            padding: 18px 40px;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #00b4d8, #0077b6);
+            box-shadow: 0 8px 30px rgba(0, 123, 255, 0.2);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .dashboard-link:hover {
+            background: linear-gradient(45deg, #0077b6, #00b4d8);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 123, 255, 0.3);
+        }
+
+        .dashboard-link:active {
+            transform: translateY(2px);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Content Styling */
+        .dashboard-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            .dashboard-link {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+{% endblock %}

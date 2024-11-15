@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global styles reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Body background and layout */
+        body {
+            height: 100vh;
+            background: url('https://source.unsplash.com/1920x1080/?city,night') no-repeat center center/cover;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            overflow: hidden;
+            position: relative;
+            animation: changeBackground 10s infinite alternate;
+        }
+
+        /* Subtle animation for background change */
+        @keyframes changeBackground {
+            0% { background-image: url('https://source.unsplash.com/1920x1080/?city,night'); }
+            50% { background-image: url('https://source.unsplash.com/1920x1080/?sunset,sky'); }
+            100% { background-image: url('https://source.unsplash.com/1920x1080/?nature,mountains'); }
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        /* Form container styles */
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.4);
+            z-index: 1;
+            backdrop-filter: blur(12px);
+            transform: translateY(30px);
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        /* Form slide-up animation */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Heading styling */
+        .login-container h2 {
+            text-align: center;
+            color: #333;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 30px;
+        }
+
+        /* Input field styling */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.6);
+        }
+
+        /* Button styling */
+        button {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(45deg, #00c6ff, #007bff);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Footer link styling */
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 1rem;
+        }
+
+        .form-footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #0056b3;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 30px;
+                width: 80%;
+                max-width: 350px;
+            }
+
+            .login-container h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form method="POST" action="{% url 'customadmin:admin_login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" required placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required placeholder="Enter your password">
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="form-footer">
+            <p>Forgot your password? <a href="#">Reset it here</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="navbar-brand" href="{% url 'index' %}" style="color: #FFD700;">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}" style="color: #FFD700;">About&nbsp;Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'menu' %}" style="color: #FFD700;">Menu</a>
+        </li>
+        <!-- Cart Link -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'view_cart' %}" style="color: #FFD700;">
+            Cart
+            {% if cart_item_count > 0 %}
+              ({{ cart_item_count }})
+            {% else %}
+              (0)
+            {% endif %}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'order' %}" style="color: #FFD700;">Place&nbsp;an&nbsp;Order!</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login_selection' %}" style="color: #FFD700;">Login</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

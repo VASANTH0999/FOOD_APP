@@ -1,0 +1,32 @@
+/* Header Style */
+.navbar {
+    background-color: #333333; /* Dark Charcoal */
+        color: #FFD700; /* Bright Yellow */
+        padding: 20px;
+}
+.navbar-brand,
+.nav-link {
+    color: #ffffff !important; /* White */
+}
+
+/* Footer Style */
+.page-footer {
+    background-color: #004d40; /* Deep Teal */
+    color: #ffffff; /* White */
+}
+.page-footer a {
+    color: #ffffff; /* White */
+}
+.page-footer a:hover {
+    color: #e0f2f1; /* Light Teal on hover */
+}
+
+/* Content Background */
+body {
+    background-color: #333333; /* Dark Charcoal */
+        color: #FFD700; /* Bright Yellow */
+        padding: 20px;
+}
+.container {
+    padding: 20px;
+}

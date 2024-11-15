@@ -1,0 +1,336 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <style>
+        img {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        img.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        body {
+            background-image: url("{% static 'images/4.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: repeat;
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+        }
+
+        .btn-quantity {
+            color: red;
+            border: 1px solid red;
+        }
+
+        .btn-quantity:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .btn-order {
+            background-color: #333333;
+            color: #FFD700;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-order:hover {
+            background-color: #FFD700;
+            color: #333333;
+            transform: scale(1.05);
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .rating {
+            font-size: 20px;
+            color: gold;
+        }
+
+        .star {
+            cursor: pointer;
+        }
+
+        .star:hover,
+        .star:hover ~ .star {
+            color: gold;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('scroll', function() {
+            var images = document.querySelectorAll('img');
+            images.forEach(function(image) {
+                var position = image.getBoundingClientRect().top;
+                if (position < window.innerHeight) {
+                    image.classList.add('show');
+                }
+            });
+        });
+
+        function decreaseQuantity(id, price) {
+            var input = document.getElementById(id);
+            if (input.value > 1) {
+                input.value--;
+                updateTotalPrice(id, price);
+            }
+        }
+
+        function increaseQuantity(id, price) {
+            var input = document.getElementById(id);
+            input.value++;
+            updateTotalPrice(id, price);
+        }
+
+        function updateTotalPrice(id, price) {
+            var input = document.getElementById(id);
+            var quantity = input.value;
+            var total = price * quantity;
+            document.getElementById('price' + id.slice(-1)).textContent = total;
+        }
+
+        function rateItem(itemId, rating) {
+            document.getElementById('rating-value' + itemId).textContent = rating;
+            const stars = document.querySelectorAll(`.rating[data-item-id="${itemId}"] .star`);
+            stars.forEach((star, index) => {
+                star.style.color = index < rating ? 'gold' : 'black';
+            });
+        }
+    </script>
+</head>
+
+<div class="container mb-5">
+    <div class="row justify-content-center mt-1">
+        <div class="col-md-12 col-sm-12 p-4">
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Biryani Section -->
+                <div class="pt-5">
+                    {% for biryani in Biryanis %}
+                    <div class="row">
+                        <div class="col-md-2 col-sm-12">
+                            <img class="rounded" src="{{ biryani.image.url }}" width="150" height="100" alt="{{ biryani.name }}"/>
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <div class="d-flex flex-row">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" name="items[]" class="form-check-input" value="{{ biryani.pk }}">
+                                    <label class="form-check-label">{{ biryani.name }}</label>
+                                </div>
+                                <p class="font-weight-bold pl-5">₹<span id="price{{ biryani.pk }}">{{ biryani.price }}</span></p>
+                            </div>
+                            <p>{{ biryani.description }}</p>
+
+                            <!-- Quantity Controls -->
+                            <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-sm btn-outline-secondary btn-quantity" onclick="decreaseQuantity('biryani{{ biryani.pk }}', {{ biryani.price }})">-</button>
+                            <input type="number" name="quantities[{{ biryani.pk }}]" id="biryani{{ biryani.pk }}" class="form-control quantity-input mx-2" value="1" min="1" onchange="updateTotalPrice('biryani{{ biryani.pk }}', {{ biryani.price }})">
+                            <button type="button" class="btn btn-sm btn-outline-secondary btn-quantity" onclick="increaseQuantity('biryani{{ biryani.pk }}', {{ biryani.price }})">+</button>
+                            </div>
+
+                            <!-- Rating Section -->
+                            <div class="rating" data-item-id="{{ biryani.pk }}">
+                                <span class="star" onclick="rateItem({{ biryani.pk }}, 1)">★</span>
+                                <span class="star" onclick="rateItem({{ biryani.pk }}, 2)">★</span>
+                                <span class="star" onclick="rateItem({{ biryani.pk }}, 3)">★</span>
+                                <span class="star" onclick="rateItem({{ biryani.pk }}, 4)">★</span>
+                                <span class="star" onclick="rateItem({{ biryani.pk }}, 5)">★</span>
+                            </div>
+                            <div class="rating-value" id="rating-value{{ biryani.pk }}">0</div>
+                        </div>
+                    </div>
+                    <hr />
+                    {% endfor %}
+                </div>
+
+                <!-- Fry Section -->
+                <div class="pt-5">
+                    {% for fry in frys %}
+                    <div class="row mt-4">
+                        <div class="col-md-2 col-sm-12">
+                            <img class="rounded" src="{{ fry.image.url }}" width="150" height="100" alt="{{ fry.name }}"/>
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <div class="d-flex flex-row">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" name="items[]" class="form-check-input" value="{{ fry.pk }}">
+                                    <label class="form-check-label">{{ fry.name }}</label>
+                                </div>
+                                <p class="font-weight-bold pl-5">₹<span id="price{{ fry.pk }}">{{ fry.price }}</span></p>
+                            </div>
+                            <p>{{ fry.description }}</p>
+
+                            <!-- Quantity Controls -->
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decreaseQuantity('fry{{ fry.pk }}', {{ fry.price }})">-</button>
+                                <input type="number" name="quantities[{{ fry.pk }}]" id="fry{{ fry.pk }}" class="form-control quantity-input mx-2" value="1" min="1" onchange="updateTotalPrice('fry{{ fry.pk }}', {{ fry.price }})">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="increaseQuantity('fry{{ fry.pk }}', {{ fry.price }})">+</button>
+                            </div>
+
+                            <!-- Rating Section -->
+                            <div class="rating" data-item-id="{{ fry.pk }}">
+                                <span class="star" onclick="rateItem({{ fry.pk }}, 1)">★</span>
+                                <span class="star" onclick="rateItem({{ fry.pk }}, 2)">★</span>
+                                <span class="star" onclick="rateItem({{ fry.pk }}, 3)">★</span>
+                                <span class="star" onclick="rateItem({{ fry.pk }}, 4)">★</span>
+                                <span class="star" onclick="rateItem({{ fry.pk }}, 5)">★</span>
+                            </div>
+                            <div class="rating-value" id="rating-value{{ fry.pk }}">0</div>
+                        </div>
+                    </div>
+                    <hr />
+                    {% endfor %}
+                </div>
+
+                <!-- Dessert Section -->
+                <div class="pt-5">
+                    {% for dessert in desserts %}
+                    <div class="row mt-4">
+                        <div class="col-md-2 col-sm-12">
+                            <img class="rounded" src="{{ dessert.image.url }}" width="150" height="100" alt="{{ dessert.name }}"/>
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <div class="d-flex flex-row">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" name="items[]" class="form-check-input" value="{{ dessert.pk }}">
+                                    <label class="form-check-label">{{ dessert.name }}</label>
+                                </div>
+                                <p class="font-weight-bold pl-5">₹<span id="price{{ dessert.pk }}">{{ dessert.price }}</span></p>
+                            </div>
+                            <p>{{ dessert.description }}</p>
+
+                            <!-- Quantity Controls -->
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decreaseQuantity('dessert{{ dessert.pk }}', {{ dessert.price }})">-</button>
+                                <input type="number" name="quantities[{{ dessert.pk }}]" id="dessert{{ dessert.pk }}" class="form-control quantity-input mx-2" value="1" min="1" onchange="updateTotalPrice('dessert{{ dessert.pk }}', {{ dessert.price }})">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="increaseQuantity('dessert{{ dessert.pk }}', {{ dessert.price }})">+</button>
+                            </div>
+
+                            <!-- Rating Section -->
+                            <div class="rating" data-item-id="{{ dessert.pk }}">
+                                <span class="star" onclick="rateItem({{ dessert.pk }}, 1)">★</span>
+                                <span class="star" onclick="rateItem({{ dessert.pk }}, 2)">★</span>
+                                <span class="star" onclick="rateItem({{ dessert.pk }}, 3)">★</span>
+                                <span class="star" onclick="rateItem({{ dessert.pk }}, 4)">★</span>
+                                <span class="star" onclick="rateItem({{ dessert.pk }}, 5)">★</span>
+                            </div>
+                            <div class="rating-value" id="rating-value{{ dessert.pk }}">0</div>
+                        </div>
+                    </div>
+                    <hr />
+                    {% endfor %}
+                </div>
+
+                <!-- Drink Section -->
+                <div class="pt-5">
+                    {% for drink in drinks %}
+                    <div class="row mt-4">
+                        <div class="col-md-2 col-sm-12">
+                            <img class="rounded" src="{{ drink.image.url }}" width="150" height="100" alt="{{ drink.name }}"/>
+                        </div>
+                        <div class="col-md-8 col-sm-12">
+                            <div class="d-flex flex-row">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" name="items[]" class="form-check-input" value="{{ drink.pk }}">
+                                    <label class="form-check-label">{{ drink.name }}</label>
+                                </div>
+                                <p class="font-weight-bold pl-5">₹<span id="price{{ drink.pk }}">{{ drink.price }}</span></p>
+                            </div>
+                            <p>{{ drink.description }}</p>
+
+                            <!-- Quantity Controls -->
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decreaseQuantity('drink{{ drink.pk }}', {{ drink.price }})">-</button>
+                                <input type="number" name="quantities[{{ drink.pk }}]" id="drink{{ drink.pk }}" class="form-control quantity-input mx-2" value="1" min="1" onchange="updateTotalPrice('drink{{ drink.pk }}', {{ drink.price }})">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="increaseQuantity('drink{{ drink.pk }}', {{ drink.price }})">+</button>
+                            </div>
+
+                            <!-- Rating Section -->
+                            <div class="rating" data-item-id="{{ drink.pk }}">
+                                <span class="star" onclick="rateItem({{ drink.pk }}, 1)">★</span>
+                                <span class="star" onclick="rateItem({{ drink.pk }}, 2)">★</span>
+                                <span class="star" onclick="rateItem({{ drink.pk }}, 3)">★</span>
+                                <span class="star" onclick="rateItem({{ drink.pk }}, 4)">★</span>
+                                <span class="star" onclick="rateItem({{ drink.pk }}, 5)">★</span>
+                            </div>
+                            <div class="rating-value" id="rating-value{{ drink.pk }}">0</div>
+                        </div>
+                    </div>
+                    <hr />
+                    {% endfor %}
+                </div>
+
+                <!-- User Info Section -->
+                <div class="form-group pt-3">
+                 <label for="name">Full Name</label>
+                    <input required class="form-control" type="text" placeholder="Your Name" name="name" />
+                        </div>
+
+                <div class="form-group pt-3">
+                    <label for="email">Email Address</label>
+                        <input required class="form-control" type="email" placeholder="example@company.com" name="email" />
+                         </div>
+
+<!-- Updated Address fields -->
+                <div class="form-group pt-3">
+                     <label for="street">Street</label>
+                        <input required class="form-control" type="text" placeholder="123 Street Name" name="street" />
+                         </div>
+
+<div class="form-group pt-3">
+    <label for="city">City</label>
+    <input required class="form-control" type="text" placeholder="City" name="city" />
+</div>
+
+<div class="form-group pt-3">
+    <label for="state">State</label>
+    <input required class="form-control" type="text" placeholder="State" name="state" />
+</div>
+
+<div class="form-group pt-3">
+    <label for="zip">Postal Code</label>
+    <input required class="form-control" type="text" placeholder="Postal Code" name="zip" />
+</div>
+
+
+                <!-- Submit Button with Modal -->
+   <button type="button" class="btn btn-order" data-toggle="modal" data-target="#submitModalOrder">Order Now</button>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="submitModalLabel">Confirm Your Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to place this order?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!-- Submit button to submit the form -->
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

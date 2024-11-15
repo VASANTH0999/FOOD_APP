@@ -1,0 +1,14 @@
+{% extends "account/base.html" %}
+
+{% block head_title %}Access Denied{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-sm-12">
+        <h1>403 Forbidden</h1>
+        <p>Sorry, you do not have permission to access this page.</p>
+        <p>If you believe this is an error, please contact the administrator or try logging in with a different account.</p>
+        <a href="{% url 'account_login' %}" class="btn btn-dark btn-block">Back to Login</a>
+    </div>
+</div>
+{% endblock %}
